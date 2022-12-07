@@ -1,11 +1,11 @@
 import React,{useEffect, useState}from 'react';
+import movies from './movies.gif';
+import {Link} from 'react-router-dom';    
 import axios from 'axios';
-import movies from './movies.gif'
-import {setGlobalState,useGlobalState} from './state'
-
+import{setGlobalState,useGlobalState} from './state';
 
 function Films() {
-   
+   const id = useGlobalState('id')
     const[FilmDetail,setFilmDetail] = useState(
         [{
         title:"",
@@ -16,15 +16,17 @@ function Films() {
     ]);
     
     const FetchFilms = () => {
+       
         axios.get("https://swapi.dev/api/films")
             .then((response) => {
                 console.log("Responmse", response);
                 setFilmDetail(response.data.results); 
-                // setGlobalState("id",response.results.id)
-                console.log(response.results.episode_id)
+                setGlobalState('id',response.data.results[0].url);
+            console.log("url",response.data.results[0].url);
+
             })
     }
-    
+  
     useEffect(() => {
         FetchFilms()
       },[]);
@@ -52,7 +54,7 @@ function Films() {
                   <td>{detail.episode_id}</td>
                   <td>{detail.release_date}</td>
                   <td>{detail.director}</td>
-                  <td><button onClick={FilmDetails}>View Details</button></td>
+                  <td><Link to='/viewlist'>View Details</Link></td>
                 </tr>
                 
             )
